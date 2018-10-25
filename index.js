@@ -1,15 +1,17 @@
 const serverless = require('serverless-http');
-const express = require('express')
+const express = require('express');
+const massive = require('massive');
+const config = require('./config.js')
 const app = express()
 
-massive(config.connection).then( db => {      // Returns database. See Massive docs for connection options
+massive(config.connection).then( db => {
   app.set('db', db)
   console.log('db')
 }).catch( err => {
-  console.log(err)                          //If Dual Session can't connect to db
+  console.log(err)    
 })
 
-app.get('/so', function (req, res) {
+app.get('/', function (req, res) {
   res.send('Hello World!')
 })
 
