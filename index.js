@@ -12,6 +12,8 @@ massive(config.connection).then( db => {
 })
 
 app.get('/', function (req, res) {
+  console.log("hello")
+  console.log(req.app.get('db'))
   res.send('Hello World!')
 })
 
