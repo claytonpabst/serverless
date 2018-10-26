@@ -10,7 +10,7 @@ functions:
   app:
     handler: index.handler
     events:
-      - http: ANY /api
+      - http: ANY /
   userController:
     handler: userController.handler
     events:

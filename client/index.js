@@ -38,4 +38,4 @@ app.get("/*", function(req, res) {
   res.send(html);
 });
 
-module.exports.app = serverless(app);
+module.exports.handler = serverless(app);

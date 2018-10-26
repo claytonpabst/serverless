@@ -1,4 +1,4 @@
-service: "serverless"
+service: "serverless-client"
 
 provider:
   name: aws
@@ -7,26 +7,11 @@ provider:
   region: us-east-1
 
 functions:
-  admin_console:
-    handler: handler.app
-    environment:
-      STAGE: ${self:provider.stage}
+  app:
+    handler: index.handler
     events:
-      - http:
-          path: /
-          method: get
-      - http:
-          path: /{resource}
-          method: get
-      - http:
-          path: /client/{resource}
-          method: get
-      - http:
-          path: /login
-          method: get
-      - http:
-          path: /community
-          method: get
+      - http: ANY /
+
 plugins:
   - serverless-webpack
   - serverless-offline
