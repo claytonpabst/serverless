@@ -1,0 +1,32 @@
+service: "serverless"
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: dev
+  region: us-east-1
+
+functions:
+  admin_console:
+    handler: handler.app
+    environment:
+      STAGE: ${self:provider.stage}
+    events:
+      - http:
+          path: /
+          method: get
+      - http:
+          path: /{resource}
+          method: get
+      - http:
+          path: /client/{resource}
+          method: get
+      - http:
+          path: /login
+          method: get
+      - http:
+          path: /community
+          method: get
+plugins:
+  - serverless-webpack
+  - serverless-offline
