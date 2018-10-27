@@ -17,6 +17,7 @@ function loadHTML() {
 }
 
 app.get("/", function(req, res) {
+  res.send("hit")
   fs.readFile("./dist/index.html", "utf-8", (err, data) => {
     res.send(data);
   });
