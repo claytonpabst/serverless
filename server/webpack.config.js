@@ -3,6 +3,7 @@ const path = require("path");
 const nodeExternals = require("webpack-node-externals");
 // eslint-disable-next-line import/no-extraneous-dependencies
 const slsw = require("serverless-webpack");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: slsw.lib.entries,
@@ -10,7 +11,11 @@ module.exports = {
   node: {
     __dirname: true
   },
-  devtool: "source-map",
+  devtool: "nosources-source-map",
+  optimization: {
+    // We no not want to minimize our code.
+    minimize: false
+  },
   externals: [nodeExternals()],
   mode: slsw.lib.webpack.isLocal ? "development" : "production",
   resolve: {
@@ -19,19 +24,38 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.ts(x?)$/,
+        test: /\.js$/,
+        loader: "babel-loader",
+        include: __dirname,
+        exclude: /node_modules/,
+        query: {
+          presets: ["es2015", "react-app", "stage-2"],
+          plugins: ["css-modules-transform"]
+        }
+      },
+      {
+        test: /\.(png|jp(e*)g|svg)$/,
         use: [
           {
-            loader: "ts-loader"
+            loader: "url-loader",
+            options: {
+              limit: 8000,
+              name: "images/[hash]-[name].[ext]"
+            }
           }
         ]
-      },
-      { test: /\.graphql?$/, loader: "webpack-graphql-loader" }
+      }
     ]
   },
   output: {
     libraryTarget: "commonjs",
     path: path.join(__dirname, ".webpack"),
-    filename: "[name].js"
-  }
+    filename: "[name].js",
+    sourceMapFilename: "[file].map"
+  },
+  plugins: [
+    new CopyWebpackPlugin([{ from: "client/build", to: "build" }], {
+      debug: "info"
+    })
+  ]
 };
